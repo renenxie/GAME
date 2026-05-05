@@ -26,10 +26,14 @@ function showAgeSelect() {
             window.gameMode = 'child';
             gameMode = 'child';
             ageDialog.style.display = 'none';
-            
+
             // 為 body 加上標記
             document.body.classList.add('child-mode');
-            
+
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'game_mode_select', { game_mode: 'child' });
+            }
+
             console.log('✅ 已設定 gameMode = child');
             resolve('child');
         };
@@ -43,10 +47,14 @@ function showAgeSelect() {
             window.gameMode = 'adult';
             gameMode = 'adult';
             ageDialog.style.display = 'none';
-            
+
             // 移除小朋友版標記
             document.body.classList.remove('child-mode');
-            
+
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'game_mode_select', { game_mode: 'adult' });
+            }
+
             console.log('✅ 已設定 gameMode = adult');
             resolve('adult');
         };
@@ -324,7 +332,14 @@ function loadChapter(chapterId) {
             if (typeof DialogueSystem !== 'undefined') {
                 DialogueSystem.isIntro = false;
                 DialogueSystem.loadChapter(chapterData);
-                
+
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'chapter_start', {
+                        chapter_id: chapterId,
+                        game_mode: window.gameMode || 'adult'
+                    });
+                }
+
                 // ✅ 設定章節完成回調
                 DialogueSystem.onChapterComplete = function() {
                     completeChapter(chapterId);
@@ -513,6 +528,13 @@ function completeChapter(chapterId) {
     if (chapterStatus[chapterId] === 'open') {
         setChapterStatus(chapterId, 'completed');
         console.log(`🎉 完成關卡: ${chapterId}，已鎖定`);
+
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'chapter_complete', {
+                chapter_id: chapterId,
+                game_mode: window.gameMode || 'adult'
+            });
+        }
     } else {
         console.log(`⚠️ 無法完成 ${chapterId}，當前狀態不是 open: ${chapterStatus[chapterId]}`);
     }

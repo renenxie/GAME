@@ -28,6 +28,14 @@ const GameEngine = {
         const Minigame = minigameMap[minigameName];
         if (Minigame && Minigame.start) {
             this.currentMinigame = minigameName;
+
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'minigame_start', {
+                    minigame_type: minigameName,
+                    level: options.level || 1
+                });
+            }
+
             Minigame.start({
                 ...options,  // 展開所有參數（包含 cols, rows, time, memorizationTime, onComplete 等）
                 onComplete: (success) => {
@@ -37,7 +45,17 @@ const GameEngine = {
                         canvas.classList.remove('minigame-active');
                     }
                     this.currentMinigame = null;
-                    
+
+                    if (typeof gtag !== 'undefined') {
+                        const params = {
+                            minigame_type: minigameName,
+                            level: options.level || 1,
+                            success: success
+                        };
+                        if (Minigame.score !== undefined) params.score = Minigame.score;
+                        gtag('event', 'minigame_complete', params);
+                    }
+
                     // 執行完成回調
                     if (options && options.onComplete) {
                         options.onComplete(success);
