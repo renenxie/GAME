@@ -30,19 +30,16 @@ const Analytics = {
     },
 
     _sendToSheets: function(levelId, eventType, timeSpent) {
-        const payload = {
+        const params = new URLSearchParams({
             date: this._getDate(),
             session_id: this._sessionId || '',
             game_mode: this._gameMode || '',
             level_id: levelId,
             event_type: eventType,
             time_spent: timeSpent !== undefined ? timeSpent : ''
-        };
-        fetch(this._sheetsUrl, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify(payload)
+        });
+        fetch(this._sheetsUrl + '?' + params.toString(), {
+            mode: 'no-cors'
         }).catch(() => {});
     },
 
