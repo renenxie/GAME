@@ -30,6 +30,8 @@ function showAgeSelect() {
             // 為 body 加上標記
             document.body.classList.add('child-mode');
 
+            if (typeof Analytics !== 'undefined') Analytics.setGameMode('child');
+
             console.log('✅ 已設定 gameMode = child');
             resolve('child');
         };
@@ -46,6 +48,8 @@ function showAgeSelect() {
 
             // 移除小朋友版標記
             document.body.classList.remove('child-mode');
+
+            if (typeof Analytics !== 'undefined') Analytics.setGameMode('adult');
 
             console.log('✅ 已設定 gameMode = adult');
             resolve('adult');
