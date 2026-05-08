@@ -3,14 +3,18 @@ const Analytics = {
     _startTimes: {},
     _attemptCounts: {},
     _gameMode: null,
+    _sessionId: null,
 
     setGameMode: function(mode) {
         this._gameMode = mode;
+        // 選擇模式時產生本次遊玩的唯一 ID
+        this._sessionId = 'gs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
     },
 
     _base: function(extra) {
         const params = {};
         if (this._gameMode) params.game_mode = this._gameMode;
+        if (this._sessionId) params.game_session_id = this._sessionId;
         return Object.assign(params, extra);
     },
 
