@@ -120,8 +120,8 @@ html {
 /* 遊戲主容器 */
 #game-wrapper {
     position: relative;
-    width: min(100vw, calc(100dvh * 16 / 9));
-    height: min(100dvh, calc(100vw * 9 / 16));
+    width: 100vw;
+    height: min(calc(100vw * 9 / 16), 100dvh);
     margin: auto;
     overflow: hidden;
 }
