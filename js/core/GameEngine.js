@@ -29,11 +29,10 @@ const GameEngine = {
         if (Minigame && Minigame.start) {
             this.currentMinigame = minigameName;
 
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'minigame_start', {
-                    minigame_type: minigameName,
-                    level: options.level || 1
-                });
+            const levelId = minigameName + '_lv' + (options.level || 1);
+
+            if (typeof Analytics !== 'undefined') {
+                Analytics.levelStart(levelId);
             }
 
             Minigame.start({
@@ -46,14 +45,12 @@ const GameEngine = {
                     }
                     this.currentMinigame = null;
 
-                    if (typeof gtag !== 'undefined') {
-                        const params = {
-                            minigame_type: minigameName,
-                            level: options.level || 1,
-                            success: success
-                        };
-                        if (Minigame.score !== undefined) params.score = Minigame.score;
-                        gtag('event', 'minigame_complete', params);
+                    if (typeof Analytics !== 'undefined') {
+                        if (success) {
+                            Analytics.levelComplete(levelId);
+                        } else {
+                            Analytics.levelFail(levelId, 'game_over');
+                        }
                     }
 
                     // 執行完成回調

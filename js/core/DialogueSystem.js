@@ -275,16 +275,6 @@ const DialogueSystem = {
     handleOption: async function(option) {
         console.log('🎯 處理選項:', option);
 
-        if (typeof gtag !== 'undefined') {
-            const currentNode = this.currentDialogue[this.currentIndex];
-            gtag('event', 'player_choice', {
-                chapter_id: this.currentChapter ? this.currentChapter.id : 'unknown',
-                node_id: currentNode ? (currentNode.id || String(this.currentIndex)) : String(this.currentIndex),
-                choice_text: option.text || '',
-                choice_action: option.action || 'next'
-            });
-        }
-
         // 清空選項
         if (this.optionsContainer) {
             this.optionsContainer.innerHTML = '';

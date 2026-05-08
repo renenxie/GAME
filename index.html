@@ -30,6 +30,22 @@
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'G-9S7M4SREJM');
+
+        function _getDeviceModel() {
+            const ua = navigator.userAgent;
+            if (/iPhone/.test(ua)) return 'iPhone';
+            if (/iPad/.test(ua)) return 'iPad';
+            if (/Android/.test(ua)) return 'Android';
+            return 'Desktop';
+        }
+
+        window.onerror = function(message, source, lineno, colno, error) {
+            if (typeof Analytics !== 'undefined') {
+                const errorType = (error && error.name ? error.name : 'UnknownError') + ': ' + message;
+                Analytics.gameError(errorType, _getDeviceModel());
+            }
+            return false;
+        };
     </script>
 </head>
 <body>
@@ -166,8 +182,11 @@
 
     <!-- 6. 圖文展示系統 -->
     <script src="js/core/GallerySystem.js"></script>
-    
-    <!-- 7. 主入口 - 最後載入 -->
+
+    <!-- 7. 分析模組 -->
+    <script src="js/core/Analytics.js"></script>
+
+    <!-- 8. 主入口 - 最後載入 -->
     <script src="js/main.js"></script>
     
     <!-- ========== Service Worker 註冊（PWA） ========== -->
