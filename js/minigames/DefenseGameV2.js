@@ -386,6 +386,21 @@ const DefenseGameV2 = {
                 <div id="defense-combo" style="font-size:${comboFontSize}px; font-weight:bold; color:#00ffaa; background:rgba(0,0,0,0.5); display:inline-block; padding:5px 15px; border-radius:30px;">分數: 0</div>
             </div>
             <div style="position:absolute; bottom:3%; left:0; width:100%; text-align:center; color:#888; font-size:${hintFontSize}px; background:rgba(0,0,0,0.4); padding:5px;">滑動方向發射投射物 · AOE模式需旋轉</div>
+
+            <!-- 電腦用方向按鈕（觸控裝置隱藏） -->
+            <div id="desktop-controls" style="display:none; position:absolute; bottom:12%; left:50%; transform:translateX(-50%); z-index:500; user-select:none;">
+                <div style="display:grid; grid-template-columns:60px 60px 60px; grid-template-rows:60px 60px 60px; gap:4px;">
+                    <div></div>
+                    <button id="btn-up"    style="font-size:24px; background:rgba(255,255,255,0.15); border:2px solid rgba(255,255,255,0.4); border-radius:10px; color:#fff; cursor:pointer;">↑</button>
+                    <div></div>
+                    <button id="btn-left"  style="font-size:24px; background:rgba(255,255,255,0.15); border:2px solid rgba(255,255,255,0.4); border-radius:10px; color:#fff; cursor:pointer;">←</button>
+                    <div></div>
+                    <button id="btn-right" style="font-size:24px; background:rgba(255,255,255,0.15); border:2px solid rgba(255,255,255,0.4); border-radius:10px; color:#fff; cursor:pointer;">→</button>
+                    <div></div>
+                    <button id="btn-down"  style="font-size:24px; background:rgba(255,255,255,0.15); border:2px solid rgba(255,255,255,0.4); border-radius:10px; color:#fff; cursor:pointer;">↓</button>
+                    <div></div>
+                </div>
+            </div>
         `;
         
         // 修正：確保附加到正確的容器
@@ -602,18 +617,20 @@ const DefenseGameV2 = {
             region.bind(this.container, 'rotate', (e) => this.handleRotate(e));
         }
 
-        // 滑鼠點擊支援（電腦用）：依點擊位置相對中心判斷方向
-        this._mouseHandler = (e) => {
-            if (!this.gameActive) return;
-            const rect = this.stage.getBoundingClientRect();
-            const dx = e.clientX - (rect.left + rect.width / 2);
-            const dy = e.clientY - (rect.top + rect.height / 2);
-            const dir = Math.abs(dx) > Math.abs(dy)
-                ? (dx > 0 ? 'right' : 'left')
-                : (dy > 0 ? 'down' : 'up');
-            this.handleSwipe(dir);
-        };
-        this.container.addEventListener('click', this._mouseHandler);
+        // 方向按鈕（電腦用）：非觸控裝置時顯示
+        const desktopControls = document.getElementById('desktop-controls');
+        if (!window.matchMedia('(pointer: coarse)').matches && desktopControls) {
+            desktopControls.style.display = 'block';
+            ['up', 'down', 'left', 'right'].forEach(dir => {
+                const btn = document.getElementById(`btn-${dir}`);
+                if (btn) {
+                    btn.addEventListener('mousedown', (e) => {
+                        e.preventDefault();
+                        if (this.gameActive) this.handleSwipe(dir);
+                    });
+                }
+            });
+        }
 
         // 鍵盤方向鍵支援（電腦用）
         this._keyHandler = (e) => {
