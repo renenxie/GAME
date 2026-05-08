@@ -4,6 +4,7 @@ const Analytics = {
     _attemptCounts: {},
     _gameMode: null,
     _sessionId: null,
+    _sheetsUrl: 'https://script.google.com/macros/s/AKfycbwM61-s6lVF1sXFuaiU4sOJbwYLm0i6YggrAGecjPeW_cme6b4C3SolihOi-nk-v9Y/exec',
 
     setGameMode: function(mode) {
         this._gameMode = mode;
@@ -21,6 +22,28 @@ const Analytics = {
         return date + '-' + String(count).padStart(4, '0');
     },
 
+    _getDate: function() {
+        const now = new Date();
+        return now.getFullYear() + '-'
+            + String(now.getMonth() + 1).padStart(2, '0') + '-'
+            + String(now.getDate()).padStart(2, '0');
+    },
+
+    _sendToSheets: function(levelId, eventType, timeSpent) {
+        const payload = {
+            date: this._getDate(),
+            session_id: this._sessionId || '',
+            game_mode: this._gameMode || '',
+            level_id: levelId,
+            event_type: eventType,
+            time_spent: timeSpent !== undefined ? timeSpent : ''
+        };
+        fetch(this._sheetsUrl, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        }).catch(() => {});
+    },
+
     _base: function(extra) {
         const params = {};
         if (this._gameMode) params.game_mode = this._gameMode;
@@ -36,19 +59,23 @@ const Analytics = {
     },
 
     levelComplete: function(levelId) {
+        let timeSpent;
+        if (this._startTimes[levelId]) {
+            timeSpent = Math.round((Date.now() - this._startTimes[levelId]) / 1000);
+            delete this._startTimes[levelId];
+        }
+        this._sendToSheets(levelId, 'level_complete', timeSpent);
         if (typeof gtag === 'undefined') return;
         const params = this._base({
             level_id: levelId,
             attempt_count: this._attemptCounts[levelId] || 1
         });
-        if (this._startTimes[levelId]) {
-            params.time_spent = Math.round((Date.now() - this._startTimes[levelId]) / 1000);
-            delete this._startTimes[levelId];
-        }
+        if (timeSpent !== undefined) params.time_spent = timeSpent;
         gtag('event', 'level_complete', params);
     },
 
     levelFail: function(levelId) {
+        this._sendToSheets(levelId, 'level_fail');
         if (typeof gtag === 'undefined') return;
         gtag('event', 'level_fail', this._base({ level_id: levelId }));
     },
