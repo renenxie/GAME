@@ -18,7 +18,7 @@ const Analytics = {
         const key = 'gs_count_' + date;
         const count = (parseInt(localStorage.getItem(key) || '0') + 1);
         localStorage.setItem(key, count.toString());
-        return date + '-' + count;
+        return date + '-' + String(count).padStart(4, '0');
     },
 
     _base: function(extra) {
