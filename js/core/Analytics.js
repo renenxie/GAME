@@ -7,8 +7,18 @@ const Analytics = {
 
     setGameMode: function(mode) {
         this._gameMode = mode;
-        // 選擇模式時產生本次遊玩的唯一 ID
-        this._sessionId = 'gs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
+        this._sessionId = this._generateSessionId();
+    },
+
+    _generateSessionId: function() {
+        const now = new Date();
+        const date = now.getFullYear().toString()
+            + String(now.getMonth() + 1).padStart(2, '0')
+            + String(now.getDate()).padStart(2, '0');
+        const key = 'gs_count_' + date;
+        const count = (parseInt(localStorage.getItem(key) || '0') + 1);
+        localStorage.setItem(key, count.toString());
+        return date + '-' + count;
     },
 
     _base: function(extra) {
