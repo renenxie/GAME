@@ -602,20 +602,34 @@ const DefenseGameV2 = {
             region.bind(this.container, 'rotate', (e) => this.handleRotate(e));
         }
 
+        // 滑鼠點擊支援（電腦用）：依點擊位置相對中心判斷方向
+        this._mouseHandler = (e) => {
+            if (!this.gameActive) return;
+            const rect = this.stage.getBoundingClientRect();
+            const dx = e.clientX - (rect.left + rect.width / 2);
+            const dy = e.clientY - (rect.top + rect.height / 2);
+            const dir = Math.abs(dx) > Math.abs(dy)
+                ? (dx > 0 ? 'right' : 'left')
+                : (dy > 0 ? 'down' : 'up');
+            this.handleSwipe(dir);
+        };
+        this.container.addEventListener('click', this._mouseHandler);
+
         // 鍵盤方向鍵支援（電腦用）
         this._keyHandler = (e) => {
-            if (!this.gameActive) return;
             const map = {
                 ArrowUp: 'up', ArrowDown: 'down',
-                ArrowLeft: 'left', ArrowRight: 'right'
+                ArrowLeft: 'left', ArrowRight: 'right',
+                w: 'up', s: 'down', a: 'left', d: 'right',
+                W: 'up', S: 'down', A: 'left', D: 'right'
             };
             const dir = map[e.key];
             if (dir) {
                 e.preventDefault();
-                this.handleSwipe(dir);
+                if (this.gameActive) this.handleSwipe(dir);
             }
         };
-        document.addEventListener('keydown', this._keyHandler);
+        window.addEventListener('keydown', this._keyHandler);
     },
     
     // ========== 攻擊序列 ==========
@@ -2455,10 +2469,14 @@ const DefenseGameV2 = {
     },
     
     closeResultAndComplete: function() {
-        // 移除鍵盤監聽
+        // 移除電腦輸入監聽
         if (this._keyHandler) {
-            document.removeEventListener('keydown', this._keyHandler);
+            window.removeEventListener('keydown', this._keyHandler);
             this._keyHandler = null;
+        }
+        if (this._mouseHandler) {
+            this.container && this.container.removeEventListener('click', this._mouseHandler);
+            this._mouseHandler = null;
         }
 
         // ✅ 清理軌跡更新循環
