@@ -601,6 +601,21 @@ const DefenseGameV2 = {
             const region = new ZingTouch.Region(this.container);
             region.bind(this.container, 'rotate', (e) => this.handleRotate(e));
         }
+
+        // 鍵盤方向鍵支援（電腦用）
+        this._keyHandler = (e) => {
+            if (!this.gameActive) return;
+            const map = {
+                ArrowUp: 'up', ArrowDown: 'down',
+                ArrowLeft: 'left', ArrowRight: 'right'
+            };
+            const dir = map[e.key];
+            if (dir) {
+                e.preventDefault();
+                this.handleSwipe(dir);
+            }
+        };
+        document.addEventListener('keydown', this._keyHandler);
     },
     
     // ========== 攻擊序列 ==========
@@ -2440,6 +2455,12 @@ const DefenseGameV2 = {
     },
     
     closeResultAndComplete: function() {
+        // 移除鍵盤監聽
+        if (this._keyHandler) {
+            document.removeEventListener('keydown', this._keyHandler);
+            this._keyHandler = null;
+        }
+
         // ✅ 清理軌跡更新循環
         if (this.trailInterval) {
             clearInterval(this.trailInterval);
