@@ -6,12 +6,12 @@
     <title>北斗紅磚市場的微光記憶</title>
     
     <!-- ========== PWA 設定 ========== -->
-    <link rel="manifest" href="/GAME/manifest.json">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="紅磚市場">
-    <link rel="apple-touch-icon" href="/GAME/assets/icons/icon-256.png">
+    <link rel="apple-touch-icon" href="/assets/icons/icon-256.png">
     
     <!-- ========== CSS ========== -->
     <link rel="stylesheet" href="style.css">
@@ -193,7 +193,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/GAME/sw.js').then(function(registration) {
+                navigator.serviceWorker.register('/sw.js').then(function(registration) {
                     console.log('✅ Service Worker 註冊成功，範圍:', registration.scope);
                 }).catch(function(error) {
                     console.log('❌ Service Worker 註冊失敗:', error);
