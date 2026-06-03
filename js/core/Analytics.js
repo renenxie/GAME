@@ -23,8 +23,21 @@ const Analytics = {
     },
 
     sessionEnd: function() {
+        if (!this._sessionId) return;
         const totalSeconds = Math.round((Date.now() - _pageOpenTime) / 1000);
-        this._sendToSheets('', 'session_end', totalSeconds);
+        const data = {
+            date: this._getDate(),
+            session_id: this._sessionId,
+            game_mode: this._gameMode || '',
+            level_id: '',
+            event_type: 'session_end',
+            time_spent: totalSeconds
+        };
+        const url = this._sheetsUrl + '?' + new URLSearchParams(data).toString();
+        console.log('[Analytics] session_end, 停留:', totalSeconds, '秒');
+        try {
+            fetch(url, { mode: 'no-cors', keepalive: true });
+        } catch(e) {}
     },
 
     _generateSessionId: function() {
