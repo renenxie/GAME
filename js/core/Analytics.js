@@ -5,7 +5,7 @@ const Analytics = {
     _attemptCounts: {},
     _gameMode: null,
     _sessionId: null,
-    _sheetsUrl: 'https://script.google.com/macros/s/AKfycbwK74kycokXJ3AQo2XAy0FBsVLd-20AXi8xlo7X5rkQ06zUrROxpSCGNNhzfQ8mBxEB/exec',
+    _sheetsUrl: 'https://script.google.com/macros/s/AKfycby9UAi1BodKiaNmus9RP8KeshZf4tz8ks7gDGo4V4Q2yNp8Ldl8e7ErnB2wvp_P7SZI/exec',
 
     setGameMode: function(mode) {
         this._gameMode = mode;
