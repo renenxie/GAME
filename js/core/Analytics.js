@@ -10,6 +10,7 @@ const Analytics = {
     setGameMode: function(mode) {
         this._gameMode = mode;
         this._sessionId = this._generateSessionId();
+        this._sendToSheets('', 'session_start');
     },
 
     _generateSessionId: function() {
