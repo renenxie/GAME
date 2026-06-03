@@ -6,13 +6,13 @@
     <title>北斗紅磚市場的微光記憶</title>
     
     <!-- ========== PWA 設定 ========== -->
-    <link rel="manifest" href="/GAME/manifest.json">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="紅磚市場">
-    <link rel="apple-touch-icon" href="/GAME/assets/icons/icon-256.png">
-    
+    <link rel="apple-touch-icon" href="/assets/icons/icon-256.png">
+
     <!-- ========== CSS ========== -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/defense-game.css">
@@ -22,6 +22,31 @@
     <!-- Swiper.js CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9S7M4SREJM"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-9S7M4SREJM');
+
+        function _getDeviceModel() {
+            const ua = navigator.userAgent;
+            if (/iPhone/.test(ua)) return 'iPhone';
+            if (/iPad/.test(ua)) return 'iPad';
+            if (/Android/.test(ua)) return 'Android';
+            return 'Desktop';
+        }
+
+        window.onerror = function(message, source, lineno, colno, error) {
+            if (typeof Analytics !== 'undefined') {
+                const errorType = (error && error.name ? error.name : 'UnknownError') + ': ' + message;
+                Analytics.gameError(errorType, _getDeviceModel());
+            }
+            return false;
+        };
+    </script>
 </head>
 <body>
     <div id="game-wrapper">
