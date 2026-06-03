@@ -1,25 +1,30 @@
 // js/core/Analytics.js
 console.log('[Analytics] Analytics.js 載入完成');
+
+// 頁面打開瞬間就記錄
+const _pageOpenTime = Date.now();
+const _pageOpenTimeStr = (function() {
+    const now = new Date();
+    return String(now.getHours()).padStart(2, '0') + ':'
+        + String(now.getMinutes()).padStart(2, '0');
+})();
+
 const Analytics = {
     _startTimes: {},
     _attemptCounts: {},
     _gameMode: null,
     _sessionId: null,
-    _sessionStartTime: null,
     _sheetsUrl: 'https://script.google.com/macros/s/AKfycbwAf9vlPwDiVXO9zHqQ2JRTk7Qj9hvBSPjPv6G7pAOstYhwe_VvLVc12I2laax1w3GH/exec',
 
     setGameMode: function(mode) {
         this._gameMode = mode;
         this._sessionId = this._generateSessionId();
-        this._sessionStartTime = Date.now();
-        this._sendToSheets('', 'session_start', undefined, { entry_time: this._getTime() });
+        this._sendToSheets('', 'session_start', undefined, { entry_time: _pageOpenTimeStr });
     },
 
     sessionEnd: function() {
-        if (!this._sessionStartTime) return;
-        const totalSeconds = Math.round((Date.now() - this._sessionStartTime) / 1000);
+        const totalSeconds = Math.round((Date.now() - _pageOpenTime) / 1000);
         this._sendToSheets('', 'session_end', totalSeconds);
-        this._sessionStartTime = null;
     },
 
     _generateSessionId: function() {
