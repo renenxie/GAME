@@ -1,4 +1,5 @@
 // js/core/Analytics.js
+console.log('[Analytics] Analytics.js 載入完成');
 const Analytics = {
     _startTimes: {},
     _attemptCounts: {},
