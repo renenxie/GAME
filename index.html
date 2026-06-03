@@ -6,47 +6,22 @@
     <title>北斗紅磚市場的微光記憶</title>
     
     <!-- ========== PWA 設定 ========== -->
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="/GAME/manifest.json">
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="紅磚市場">
-    <link rel="apple-touch-icon" href="/assets/icons/icon-256.png">
+    <link rel="apple-touch-icon" href="/GAME/assets/icons/icon-256.png">
     
     <!-- ========== CSS ========== -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/defense-game.css">
     <link rel="stylesheet" href="css/memory-game.css">
-    <link rel="stylesheet" href="css/minigame.css">
+    <link rel="stylesheet" href="css/interact-system.css">
 
     <!-- Swiper.js CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
-    <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9S7M4SREJM"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-9S7M4SREJM');
-
-        function _getDeviceModel() {
-            const ua = navigator.userAgent;
-            if (/iPhone/.test(ua)) return 'iPhone';
-            if (/iPad/.test(ua)) return 'iPad';
-            if (/Android/.test(ua)) return 'Android';
-            return 'Desktop';
-        }
-
-        window.onerror = function(message, source, lineno, colno, error) {
-            if (typeof Analytics !== 'undefined') {
-                const errorType = (error && error.name ? error.name : 'UnknownError') + ': ' + message;
-                Analytics.gameError(errorType, _getDeviceModel());
-            }
-            return false;
-        };
-    </script>
 </head>
 <body>
     <div id="game-wrapper">
@@ -80,9 +55,19 @@
 
         <!-- 起始頁面 -->
         <div id="start-menu" class="scene">
-            <h1>北斗紅磚市場的微光記憶</h1>
-            <button id="startBtn">開始遊戲</button>
-            <button id="exitBtn">離開遊戲</button>
+            <!-- 背景由 CSS 控制，這裡放置 UI 元素 -->
+            <div class="title-container">
+                <img src="assets/images/title/title.png" alt="標題" class="start-title-img">
+            </div>
+            
+            <div class="menu-buttons">
+                <div id="startBtn" class="img-btn">
+                    <img src="assets/images/title/enter.png" alt="進入市場">
+                </div>
+                <div id="exitBtn" class="img-btn">
+                    <img src="assets/images/title/leave.png" alt="離開市場">
+                </div>
+            </div>
         </div>
 
         <div id="video-scene" class="scene" style="display:none;">
@@ -150,6 +135,9 @@
     
     <!-- ========== 核心引擎 - 注意載入順序 ========== -->
     <!-- 1. 最基本的工具 -->
+    <script src="js/core/Logger.js"></script>
+    <script src="js/core/ErrorReporter.js"></script>
+    <script src="js/data/minigameAssets.js"></script>
     <script src="js/core/LoadingManager.js"></script>
     <script src="js/core/GameEngine.js"></script>
     <script src="js/core/AudioManager.js"></script>
@@ -166,23 +154,31 @@
     <!-- 青少年版（一般模式） -->
     <script src="js/data/chapter1_teen.js"></script>
     <script src="js/data/chapter2_teen.js"></script>
-    <!-- <script src="js/data/chapter3_teen.js"></script> -->
+    <script src="js/data/chapter3_teen.js"></script>
     <!-- 小朋友版 -->
     <script src="js/data/chapter1_child.js"></script>
-    <!-- <script src="js/data/chapter2_child.js"></script> -->
-    <!-- <script src="js/data/chapter3_child.js"></script> -->
+    <script src="js/data/chapter2_child.js"></script>
+    <script src="js/data/chapter3_child.js"></script>
+    <!-- 問答題庫 -->
+    <script src="js/data/quizQuestions.js"></script>
     
     <!-- 5. 小遊戲 -->
     <script src="js/minigames/MemoryGame.js"></script>
     <!-- <script src="js/minigames/PuzzleGame.js"></script> -->
     <!-- <script src="js/minigames/FindingGame.js"></script> -->
     <script src="js/minigames/DefenseLevels.js"></script>     <!-- 先載入關卡設定 -->
+    <script src="js/minigames/defense/DefenseTrailRender.js"></script>
+    <script src="js/minigames/defense/DefenseInput.js"></script>
+    <script src="js/minigames/defense/DefenseAttackRunner.js"></script>
     <script src="js/minigames/DefenseGameV2.js"></script>
     <script src="js/minigames/MemoryGameV2.js"></script>
+    <script src="js/minigames/InteractSystem.js"></script>
+    <script src="js/minigames/PaymentSystem.js"></script>
 
-    <!-- 6. 圖文展示系統 -->
+    <!-- 6. 圖文展示系統、蒐集物品系統 -->
     <script src="js/core/GallerySystem.js"></script>
-
+    <script src="js/core/CollectionSystem.js"></script>
+    
     <!-- 7. 分析模組 -->
     <script src="js/core/Analytics.js"></script>
 
@@ -193,7 +189,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                navigator.serviceWorker.register('/GAME/sw.js').then(function(registration) {
                     console.log('✅ Service Worker 註冊成功，範圍:', registration.scope);
                 }).catch(function(error) {
                     console.log('❌ Service Worker 註冊失敗:', error);

@@ -1,6 +1,6 @@
 // sw.js - Service Worker
 // 快取名稱（更新版本時記得修改）
-const CACHE_NAME = 'game-v14';
+const CACHE_NAME = 'game-v15';
 
 // 需要快取的檔案列表（您的遊戲所有核心檔案）
 const urlsToCache = [
@@ -8,6 +8,7 @@ const urlsToCache = [
   '/index.html',
   '/style.css',
   '/css/defense-game.css',
+  '/css/memory-game.css',
   '/js/main.js',
   '/js/core/LoadingManager.js',
   '/js/core/GameEngine.js',
@@ -15,50 +16,70 @@ const urlsToCache = [
   '/js/core/SceneManager.js',
   '/js/core/Typewriter.js',
   '/js/core/DialogueSystem.js',
+  '/js/core/GallerySystem.js',
+  '/js/core/CollectionSystem.js',
   '/js/core/Analytics.js',
   '/js/data/intro.js',
   '/js/data/chapter1_teen.js',
   '/js/data/chapter1_child.js',
+  '/js/data/chapter2_teen.js',
+  '/js/data/chapter2_child.js',
+  '/js/data/quizQuestions.js',
   '/js/minigames/DefenseLevels.js',
   '/js/minigames/DefenseGameV2.js',
+  '/js/minigames/MemoryGameV2.js',
 
   // 如果有圖片資源（可選）
   '/assets/images/title2.png',
   '/assets/images/intro/封面.jpg',
-  '/assets/images/ch1/background.jpg',
+  '/assets/images/ch1/background.png',
   '/assets/images/characters/阿斗仔.png',
+  '/assets/images/ch2/background.png',
+  '/assets/images/ch2/bg.png',
+  '/assets/images/ch2/面板.png',
+  '/assets/images/ch2/資訊欄.png',
+  '/assets/images/ch2/卡背.png',
 
   // Level 1 需要的圖片
-'/assets/images/defense/level1/bg.png',
-'/assets/images/defense/level1/player.png',
-'/assets/images/defense/level1/enemy.png',
-'/assets/images/defense/level1/stone.png',
-'/assets/images/defense/level1/projectile.png',
-'/assets/images/defense/level1/projectile_hit.png',
-'/assets/images/defense/level1/shield.png',
-'/assets/images/defense/level1/aoe_line.png',
+  '/assets/images/defense/level1/bg.png',
+  '/assets/images/defense/level1/player.png',
+  '/assets/images/defense/level1/enemy.png',
+  '/assets/images/defense/level1/stone.png',
+  '/assets/images/defense/level1/projectile.png',
+  '/assets/images/defense/level1/projectile_hit.png',
+  '/assets/images/defense/level1/shield.png',
+  '/assets/images/defense/level1/aoe_line.png',
 
-// Level 2 需要的圖片
-'/assets/images/defense/level2/bg.png',
-'/assets/images/defense/level2/player.png',
-'/assets/images/defense/level2/enemy.png',
-'/assets/images/defense/level2/stone.png',
-'/assets/images/defense/level2/projectile.png',
-'/assets/images/defense/level2/projectile_hit.png',
-'/assets/images/defense/level2/shield.png',
-'/assets/images/defense/level2/aoe_line.png',
-'/assets/images/defense/level2/heavy_enemy.png',
+  // Level 2 需要的圖片
+  '/assets/images/defense/level2/bg.png',
+  '/assets/images/defense/level2/player.png',
+  '/assets/images/defense/level2/enemy.png',
+  '/assets/images/defense/level2/stone.png',
+  '/assets/images/defense/level2/projectile.png',
+  '/assets/images/defense/level2/projectile_hit.png',
+  '/assets/images/defense/level2/shield.png',
+  '/assets/images/defense/level2/aoe_line.png',
+  '/assets/images/defense/level2/heavy_enemy.png',
 
-// Level 3 需要的圖片
-'/assets/images/defense/level3/bg.png',
-'/assets/images/defense/level3/player.png',
-'/assets/images/defense/level3/enemy.png',
-'/assets/images/defense/level3/stone.png',
-'/assets/images/defense/level3/projectile.png',
-'/assets/images/defense/level3/projectile_hit.png',
-'/assets/images/defense/level3/shield.png',
-'/assets/images/defense/level3/aoe_line.png',
-'/assets/images/defense/level3/heavy_enemy.png',
+  // Level 3 需要的圖片
+  '/assets/images/defense/level3/bg.png',
+  '/assets/images/defense/level3/player.png',
+  '/assets/images/defense/level3/enemy.png',
+  '/assets/images/defense/level3/stone.png',
+  '/assets/images/defense/level3/projectile.png',
+  '/assets/images/defense/level3/projectile_hit.png',
+  '/assets/images/defense/level3/shield.png',
+  '/assets/images/defense/level3/aoe_line.png',
+  '/assets/images/defense/level3/heavy_enemy.png',
+
+  // chapter2 - 記憶遊戲需要的圖片
+  '/assets/images/memory/詹永豐米店.png',
+  '/assets/images/memory/其實豆製所.png',
+  '/assets/images/memory/彰化北斗肉圓.png',
+  '/assets/images/memory/正老店阿美.png',
+  '/assets/images/memory/阿在伯炸彈蔥油餅.png',
+  '/assets/images/memory/奠安宮楊記炸物.png',
+  '/assets/images/memory/碗粿.png',
 
 ];
 
