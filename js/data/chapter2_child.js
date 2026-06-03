@@ -57,9 +57,9 @@ const chapter2ChildData = {
                 id: "card7",
                 thumb: "assets/images/memory/碗粿.png",
                 fullImage: "assets/images/memory/碗粿.png",
-                title: "碗粿",
-                summary: "傳統的碗粿小吃。",
-                story: "用米漿做成的碗粿，口感軟軟的，配上醬油和配料，是很傳統的台灣小吃。"
+                title: "阿顯碗粿",
+                summary: "用米做成、加上香香油蔥的簡單碗粿。",
+                story: "這家碗粿店開了很久，很多人從小吃到大。碗粿是用米做的，吃起來QQ的，再加上香香的油蔥和醬油。每天做的不多，如果太晚來，就吃不到了。"
             }
         ],
     
