@@ -327,13 +327,20 @@ function loadChapter(chapterId) {
             if (typeof DialogueSystem !== 'undefined') {
                 DialogueSystem.isIntro = false;
                 DialogueSystem.loadChapter(chapterData);
-                
+
+                if (typeof Analytics !== 'undefined') {
+                    Analytics.levelStart(chapterId);
+                }
+
                 // ✅ 設定章節完成回調（在整個對話結束後觸發）
                 DialogueSystem.onChapterComplete = function() {
                     // ✅ 只有在關卡還是 'open' 狀態時才設定為 'completed'
                     if (chapterStatus[chapterId] === 'open') {
                         setChapterStatus(chapterId, 'completed');
                         console.log(`🎉 完成關卡: ${chapterId}，已鎖定`);
+                    }
+                    if (typeof Analytics !== 'undefined') {
+                        Analytics.levelComplete(chapterId);
                     }
                 };
             }
