@@ -319,6 +319,10 @@ const DefenseGameV2 = {
         this.gameActive = false;
         this.runtimeGameMode = null;
 
+        if (typeof this.removeKeyboardListener === 'function') {
+            this.removeKeyboardListener();
+        }
+
         if (this.zingRegion && this.container) {
             try {
                 this.zingRegion.unbind(this.container);

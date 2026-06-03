@@ -66,5 +66,29 @@ window.DefenseInputMixin = {
             this.zingRegion = new ZingTouch.Region(this.container);
             this.zingRegion.bind(this.container, 'rotate', (e) => this.handleRotate(e));
         }
+
+        // 鍵盤支援：方向鍵 / WASD
+        this._keyHandler = (e) => {
+            if (!this.gameActive) return;
+            const map = {
+                'ArrowUp': 'up', 'w': 'up', 'W': 'up',
+                'ArrowDown': 'down', 's': 'down', 'S': 'down',
+                'ArrowLeft': 'left', 'a': 'left', 'A': 'left',
+                'ArrowRight': 'right', 'd': 'right', 'D': 'right'
+            };
+            const dir = map[e.key];
+            if (dir) {
+                e.preventDefault();
+                this.handleSwipe(dir);
+            }
+        };
+        document.addEventListener('keydown', this._keyHandler);
+    },
+
+    removeKeyboardListener: function() {
+        if (this._keyHandler) {
+            document.removeEventListener('keydown', this._keyHandler);
+            this._keyHandler = null;
+        }
     }
 };
