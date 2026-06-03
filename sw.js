@@ -1,6 +1,6 @@
 // sw.js - Service Worker
 // 快取名稱（更新版本時記得修改）
-const CACHE_NAME = 'game-v22';
+const CACHE_NAME = 'game-v23';
 
 // 需要快取的檔案列表（您的遊戲所有核心檔案）
 const urlsToCache = [
@@ -86,6 +86,7 @@ const urlsToCache = [
 // ========== 安裝 Service Worker ==========
 self.addEventListener('install', event => {
   console.log('📦 Service Worker 安裝中');
+  self.skipWaiting(); // 安裝完立刻啟用，不等舊分頁關閉
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
@@ -127,6 +128,6 @@ self.addEventListener('activate', event => {
           }
         })
       );
-    })
+    }).then(() => self.clients.claim()) // 立刻接管所有已開啟的分頁
   );
 });
