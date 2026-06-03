@@ -38,9 +38,11 @@ const Analytics = {
             event_type: eventType,
             time_spent: timeSpent !== undefined ? timeSpent : ''
         });
-        fetch(this._sheetsUrl + '?' + params.toString(), {
-            mode: 'no-cors'
-        }).catch(() => {});
+        const url = this._sheetsUrl + '?' + params.toString();
+        console.log('[Analytics] 送出資料:', eventType, levelId, 'session:', this._sessionId);
+        fetch(url, { mode: 'no-cors' }).catch((err) => {
+            console.warn('[Analytics] 送出失敗:', err);
+        });
     },
 
     _base: function(extra) {
