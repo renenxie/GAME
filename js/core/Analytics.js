@@ -5,12 +5,21 @@ const Analytics = {
     _attemptCounts: {},
     _gameMode: null,
     _sessionId: null,
+    _sessionStartTime: null,
     _sheetsUrl: 'https://script.google.com/macros/s/AKfycby9UAi1BodKiaNmus9RP8KeshZf4tz8ks7gDGo4V4Q2yNp8Ldl8e7ErnB2wvp_P7SZI/exec',
 
     setGameMode: function(mode) {
         this._gameMode = mode;
         this._sessionId = this._generateSessionId();
-        this._sendToSheets('', 'session_start');
+        this._sessionStartTime = Date.now();
+        this._sendToSheets('', 'session_start', undefined, { entry_time: this._getTime() });
+    },
+
+    sessionEnd: function() {
+        if (!this._sessionStartTime) return;
+        const totalSeconds = Math.round((Date.now() - this._sessionStartTime) / 1000);
+        this._sendToSheets('', 'session_end', totalSeconds);
+        this._sessionStartTime = null;
     },
 
     _generateSessionId: function() {
@@ -31,16 +40,23 @@ const Analytics = {
             + String(now.getDate()).padStart(2, '0');
     },
 
-    _sendToSheets: function(levelId, eventType, timeSpent) {
-        const params = new URLSearchParams({
+    _getTime: function() {
+        const now = new Date();
+        return String(now.getHours()).padStart(2, '0') + ':'
+            + String(now.getMinutes()).padStart(2, '0');
+    },
+
+    _sendToSheets: function(levelId, eventType, timeSpent, extraParams) {
+        const data = {
             date: this._getDate(),
             session_id: this._sessionId || '',
             game_mode: this._gameMode || '',
             level_id: levelId,
             event_type: eventType,
             time_spent: timeSpent !== undefined ? timeSpent : ''
-        });
-        const url = this._sheetsUrl + '?' + params.toString();
+        };
+        if (extraParams) Object.assign(data, extraParams);
+        const url = this._sheetsUrl + '?' + new URLSearchParams(data).toString();
         console.log('[Analytics] 送出資料:', eventType, levelId, 'session:', this._sessionId);
         fetch(url, { mode: 'no-cors' }).catch((err) => {
             console.warn('[Analytics] 送出失敗:', err);

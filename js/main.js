@@ -290,6 +290,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (typeof setupBackButton !== 'undefined') {
         setupBackButton();
     }
+
+    window.addEventListener('beforeunload', function() {
+        if (typeof Analytics !== 'undefined') Analytics.sessionEnd();
+    });
 });
 
 // 載入章節（使用動態載入，根據模式選擇版本）
