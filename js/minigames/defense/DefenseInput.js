@@ -83,6 +83,7 @@ window.DefenseInputMixin = {
             }
         };
         document.addEventListener('keydown', this._keyHandler);
+        console.log('[DefenseInput] 鍵盤監聽已啟動');
     },
 
     removeKeyboardListener: function() {
